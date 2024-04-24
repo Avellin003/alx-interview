@@ -1,22 +1,26 @@
 #!/usr/bin/python3
 """Pascal Triangle"""
+
+
 def pascal_triangle(n):
-    """ Returns a pascal's triange"""
+    """returns a pascal triangle of n rows"""
     if n <= 0:
         return []
 
-    pascal = [[1]]  # Always starts with 1
+    pascal = [0] * n
 
-    for i in range(1, n):
-        previous = pascal[i - 1]
-        current_row = [1]  # Each row starts and ends with 1
+    for i in range(n):
+        # include the first row
+        nrow = [0] * (i+1)
+        nrow[0] = 1
+        nrow[len(nrow) - 1] = 1
 
-        """ calculate the pascal's triangle """
         for j in range(1, i):
-            value = previous[j - 1] + previous[j]
-            current_row.append(value)
+            if j > 0 and j < len(nrow):
+                a = pascal[i - 1][j]
+                b = pascal[i - 1][j - 1]
+                nrow[j] = a + b
 
-        current_row.append(1)  # End the row with 1
-        pascal.append(current_row)
+        pascal[i] = nrow
 
     return pascal
