@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """canUnlockAll module:
 contains the function canUnlockAll"""
+
+
 def canUnlockAll(boxes):
     keys = [0]
     for key in keys:
