@@ -1,37 +1,37 @@
 #!/usr/bin/python3
-"""alx-interview/log_parsing"""
+'''reads line and computes metrics'''
+
 
 import sys
 
-if __name__ == '__main__':
+cache = {'200': 0, '301': 0, '400': 0, '401': 0,
+         '403': 0, '404': 0, '405': 0, '500': 0}
+total_s = 0
+counter = 0
 
-    fsize, counter = 0, 0
-    cds = ["200", "301", "400", "401", "403", "404", "405", "500"]
-    status = {k: 0 for k in cds}
-
-    def print_status(status: dict, fsize: int) -> None:
-        print("File size: {:d}".format(fsize))
-        for k, v in sorted(status.items()):
-            if v:
-                print("{}: {}".format(k, v))
-
-    try:
-        for lne in sys.stdin:
+try:
+    for lin in sys.stdin:
+        line_l = lin.split(" ")
+        if len(line_l) > 4:
+            code = line_l[-2]
+            size = int(line_l[-1])
+            if code in cache.keys():
+                cache[code] += 1
+            total_s += size
             counter += 1
-            data = lne.split()
-            try:
-                scode = data[-2]
-                if scode in status:
-                    status[scode] += 1
-            except BaseException:
-                pass
-            try:
-                fsize += int(data[-1])
-            except BaseException:
-                pass
-            if counter % 10 == 0:
-                print_status(status, fsize)
-        print_status(status, fsize)
-    except KeyboardInterrupt:
-        print_status(status, fsize)
-        raise
+
+        if counter == 10:
+            counter = 0
+            print('File size: {}'.format(total_s))
+            for key, value in sorted(cache.items()):
+                if value != 0:
+                    print('{}: {}'.format(key, value))
+
+except Exception as err:
+    pass
+
+finally:
+    print('File size: {}'.format(total_s))
+    for key, value in sorted(cache.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
