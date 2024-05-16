@@ -1,4 +1,22 @@
 #!/usr/bin/python3
+"""Script to calculate metrics by reading stdin line by line:
+
+Input format: <IP Address> - [<date>] "GET /projects/260 HTTP/1.1"
+<status code> <file size> (line is skipped if not in this format)
+After every 10 lines and/or a keyboard interruption (CTRL + C),
+prints statistics:
+Total file size: File size: <tsize>
+where <tsize> is the sum of all previous <file size>
+(see input format above)
+Number of lines by status code:
+possible status code: 200, 301, 400, 401, 403, 404, 405, and 500
+if a status code doesn’t appear or is not an integer,
+no output for that status code
+format: <status code>: <number>
+status codes printed in ascending order
+
+line_info = [<IP Address>, -, [<date>], "GET /projects/260 HTTP/1.1",
+<status code>, <file size>]"""
 
 import sys
 
