@@ -15,7 +15,7 @@ def rotate_2d_matrix(matrix):
             # bottom
             matrix[up][left_s + a] = matrix[bottom - a][left_s]
             # save to up
-            matrix[bottom - a][left_s] = matrix[bottom][right_s - i]
+            matrix[bottom - a][left_s] = matrix[bottom][right_s - a]
             # right
             matrix[bottom][right_s - a] = matrix[up + a][right_s]
             # left to Top
