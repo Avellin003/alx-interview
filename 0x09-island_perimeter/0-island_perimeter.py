@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """The island algorithm solving"""
+
+
 def island_perimeter(grid):
     """Function to perform the algorithm"""
     rows = len(grid)
