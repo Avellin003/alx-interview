@@ -1,37 +1,35 @@
 #!/usr/bin/python3
+'''Prime Game'''
 
-""" Prime number algorithm """
+
+def sieve(n):
+    """ Generates a list of primes up to n using the Sieve of Eratosthenes """
+    is_prime = [True] * (n + 1)
+    p = 2
+    while (p * p <= n):
+        if is_prime[p]:
+            for i in range(p * p, n + 1, p):
+                is_prime[i] = False
+        p += 1
+    return [p for p in range(2, n + 1) if is_prime[p]]
+
+
+def play_game(n):
+    """ Simulates the game for a given n """
+    primes = sieve(n)
+    moves = 0  # Count of moves made
+
+    while primes:
+        # Current player's move
+        prime = primes.pop(0)
+        primes = [p for p in primes if p % prime != 0]
+        moves += 1
+
+    return 'Maria' if moves % 2 != 0 else 'Ben'
 
 
 def isWinner(x, nums):
-    def sieve(n):
-        """ Returns a list of primes up to n"""
-        is_prime = [True] * (n + 1)
-        is_prime[0], is_prime[1] = False, False
-        for start in range(2, int(n**0.5) + 1):
-            if is_prime[start]:
-                for i in range(start * start, n + 1, start):
-                    is_prime[i] = False
-        return [num for num, prime in enumerate(is_prime) if prime]
-
-    def play_game(n):
-        """ Simulates the game for a given n"""
-        primes = sieve(n)
-        moves = 0  # Count of moves made
-
-        while primes:
-            # Maria's move
-            if moves % 2 == 0:
-                prime = primes.pop(0)
-                primes = [p for p in primes if p % prime != 0]
-            else:  # Ben's move
-                prime = primes.pop(0)
-                primes = [p for p in primes if p % prime != 0]
-            moves += 1
-
-        return 'Maria' if moves % 2 != 0 else 'Ben'
-
-    # Initialize the win count
+    """ Determines the overall winner """
     maria_wins = 0
     ben_wins = 0
 
