@@ -1,45 +1,57 @@
 #!/usr/bin/python3
-"""Game module"""
-
-
-def is_prime(n):
-    """Check if a number is prime"""
-    if n < 2:
-        return False
-    for i in range(2, n):
-        if n % i == 0:
-            return False
-    return True
-
-
-def calculate_winner(turns, n):
-    """Calculate the winner of the game"""
-    if turns % 2 == 0:
-        return "Maria"
-    return "Ben"
+'''game module'''
 
 
 def isWinner(x, nums):
-    """Prime Game"""
-    if not nums or x < 1:
+    '''gets the winner'''
+    winnerC = {'Maria': 0, 'Ben': 0}
+
+    for i in range(x):
+        roundW = RoundW(nums[i], x)
+        if roundW is not None:
+            winnerC[roundW] += 1
+
+    if winnerC['Maria'] > winnerC['Ben']:
+        return 'Maria'
+    elif winnerC['Ben'] > winnerC['Maria']:
+        return 'Ben'
+    else:
         return None
 
-    n = max(nums)
 
-    primes = [False, False] + [True for i in range(n - 1)]
-    p = 2
-    while p * p <= n:
-        if primes[p]:
-            for i in range(p * p, n + 1, p):
-                primes[i] = False
-        p += 1
+def RoundW(n, x):
+    '''RoundW'''
+    list = [i for i in range(1, n + 1)]
+    players = ['Maria', 'Ben']
 
-    scores = [0, 0]
-    for i in range(1, n + 1):
-        if primes[i]:
-            scores[0] += 1
+    for i in range(n):
+        currentPlayer = players[i % 2]
+        selectedIdxs = []
+        prime = -1
+        for idx, num in enumerate(list):
+            if prime != -1:
+                if num % prime == 0:
+                    selectedIdxs.append(idx)
+            else:
+                if Prime(num):
+                    selectedIdxs.append(idx)
+                    prime = num
+        if prime == -1:
+            if currentPlayer == players[0]:
+                return players[1]
+            else:
+                return players[0]
         else:
-            scores[1] += 1
+            for idx, val in enumerate(selectedIdxs):
+                del list[val - idx]
+    return None
 
-    winner = calculate_winner(scores[0], n)
-    return winner
+
+def Prime(n):
+    if n == 1 or n == 0 or (n % 2 == 0 and n > 2):
+        return False
+    else:
+        for i in range(3, int(n**(1/2))+1, 2):
+            if n % i == 0:
+                return "Not prime"
+        return True
