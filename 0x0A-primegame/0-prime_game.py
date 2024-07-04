@@ -2,47 +2,65 @@
 '''Prime Game'''
 
 
-def sieve(n):
-    """ Generates a list of primes up to n using the Sieve of Eratosthenes """
-    is_prime = [True] * (n + 1)
-    p = 2
-    while (p * p <= n):
-        if is_prime[p]:
-            for i in range(p * p, n + 1, p):
-                is_prime[i] = False
-        p += 1
-    return [p for p in range(2, n + 1) if is_prime[p]]
-
-
-def play_game(n):
-    """ Simulates the game for a given n """
-    primes = sieve(n)
-    moves = 0  # Count of moves made
-
-    while primes:
-        # Current player's move
-        prime = primes.pop(0)
-        primes = [p for p in primes if p % prime != 0]
-        moves += 1
-
-    return 'Maria' if moves % 2 != 0 else 'Ben'
-
-
 def isWinner(x, nums):
-    """ Determines the overall winner """
-    maria_wins = 0
-    ben_wins = 0
+    '''Finds the winner'''
+    winner_count = {'Maria': 0, 'Ben': 0}
 
-    for n in nums:
-        winner = play_game(n)
-        if winner == 'Maria':
-            maria_wins += 1
-        else:
-            ben_wins += 1
+    for i in range(x):
+        round_winner = isRoundWinner(nums[i], x)
+        if round_winner is not None:
+            winner_count[round_winner] += 1
 
-    if maria_wins > ben_wins:
+    if winner_count['Maria'] > winner_count['Ben']:
         return 'Maria'
-    elif ben_wins > maria_wins:
+    elif winner_count['Ben'] > winner_count['Maria']:
         return 'Ben'
     else:
         return None
+
+
+def isRoundWinner(n, x):
+    '''Find round winner'''
+    num_list = [i for i in range(1, n + 1)]
+    players = ['Maria', 'Ben']
+
+    for i in range(n):
+        # Get current player
+        current_player = players[i % 2]
+        selected_indices = []
+        prime = -1
+        for idx, num in enumerate(num_list):
+            # If already picked a prime number
+            # find if num is multiple of the prime number
+            if prime != -1:
+                if num % prime == 0:
+                    selected_indices.append(idx)
+            # Else check if num is prime then pick it
+            else:
+                if isPrime(num):
+                    selected_indices.append(idx)
+                    prime = num
+        # If failed to pick then current player lost
+        if prime == -1:
+            if current_player == players[0]:
+                return players[1]
+            else:
+                return players[0]
+        else:
+            for idx, val in enumerate(selected_indices):
+                del num_list[val - idx]
+    return None
+
+
+def isPrime(n):
+    # 0, 1, even numbers greater than 2 are NOT PRIME
+    if n == 1 or n == 0 or (n % 2 == 0 and n > 2):
+        return False
+    else:
+        # Not prime if divisible by another number less
+        # or equal to the square root of itself.
+        # n**(1/2) returns square root of n
+        for i in range(3, int(n**(1/2))+1, 2):
+            if n % i == 0:
+                return False
+        return True
